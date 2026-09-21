@@ -6,6 +6,48 @@
   
   <script>
 
+    // Taken from 1st assignment, need to change for this one
+    const handleResponse = async (response) => {
+      const content = document.querySelector('#content');
+      let object = await response.json();
+      let jsonString = JSON.stringify(object);
+      console.log(jsonString);
+      let result = `Message: ${jsonString.split('message":"')[1].split('"')[0]}`;
+      content.innerHTML += `<p>${result}</p>`;
+    }
+
+    // Make a GET request
+    const getRequest = async () => {
+      const url = document.querySelector('#urlField').value;
+      const method = document.querySelector('#methodSelect').value;
+      let response = await fetch(url, {
+        method: method,
+        headers: {
+          'Accept': 'application/json'
+        },
+      });
+      handleResponse(response);
+    }
+
+    const postRequest = async () => {
+      const url = document.querySelector('#urlField').value;
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        },
+      });
+      handleResponse(response);
+    }
+
+    // Page setup
+    const init = () => {
+      const sendButton = document.querySelector('#send');
+      sendButton.addEventListener('click', () => { getRequest() });
+    }
+
+    window.onload = init;
+
   </script>
 </head>
 <body>

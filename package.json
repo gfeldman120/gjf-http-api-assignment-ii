@@ -1,0 +1,26 @@
+{
+  "name": "gjf-http-api-assignment-ii",
+  "version": "1.0.0",
+  "description": "HTTP API II",
+  "homepage": "https://github.com/gfeldman120/gjf-http-api-assignment-ii#readme",
+  "bugs": {
+    "url": "https://github.com/gfeldman120/gjf-http-api-assignment-ii/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gfeldman120/gjf-http-api-assignment-ii.git"
+  },
+  "author": "GJF",
+  "type": "commonjs",
+  "main": "eslint.config.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Error: no test specified\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0"
+  }
+}
