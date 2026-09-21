@@ -5,6 +5,7 @@ const responseHandler = require('./responses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+// Deal with incoming data
 const parseBody = (request, response) => {
   // Incoming data
   const body = [];
@@ -19,13 +20,20 @@ const parseBody = (request, response) => {
   });
   // Got all data
   request.on('end', () => {
-    // DO STUFF HERE
-
-
-    // DO STUFF HERE
+    // Get string of body text
+    const bodyString = Buffer.concat(body).toString();
+    const type = request.headers['content-type'];
+    // Parse
+    if(type === 'application/x-www-form-urlencoded') {
+      request.body = query.parse(bodyString);
+    } else if (type === 'application/json') {
+      request.body = JSON.parse(bodyString);
+    } else {
+      responseHandler.respond(request, response, 'Fail', 'text/plain', 400);
+    }
+    responseHandler.respond(request, response, '', 'text/plain', 400);
   });
-  responseHandler.testReturn(request, response, "Testing!");
-}
+};
 
 // Get the request from the client and figure out what it is
 const onRequest = (request, response) => {
@@ -36,17 +44,29 @@ const onRequest = (request, response) => {
   // Set array of all accepted types
   request.acceptedTypes = request.headers.accept ? request.headers.accept.split(',') : [];
 
-  // Do something!
   // Change which function to call based on pathname and parameters
-  switch (parsedUrl.pathname) {
-    case '/':
-      responseHandler.getIndex(request, response);
-      break;
-    case '/style.css':
-      responseHandler.getCSS(request, response);
-      break;
-    default:
-      break;
+  if(request.method === 'POST') {
+    switch (parsedUrl.pathname) {
+      case '/addUser':
+        parseBody(request, response);
+        break;
+      default:
+        break;
+    }
+  } else {
+    switch (parsedUrl.pathname) {
+      case '/':
+        responseHandler.getIndex(request, response);
+        break;
+      case '/style.css':
+        responseHandler.getCSS(request, response);
+        break;
+      case '/getUsers':
+        responseHandler.getUsers(request, response);
+        break;
+      default:
+        break;
+    }
   }
 };
 

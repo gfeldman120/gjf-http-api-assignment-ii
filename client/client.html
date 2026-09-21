@@ -42,8 +42,10 @@
 
     // Page setup
     const init = () => {
-      const sendButton = document.querySelector('#send');
-      sendButton.addEventListener('click', () => { getRequest() });
+      const addUserButton = document.querySelector('#nameForm');
+      addUserButton.addEventListener('click', () => { postRequest() });
+      const getUsersButton = document.querySelector('#nameForm');
+      getUsersButton.addEventListener('click', () => { getRequest() });
     }
 
     window.onload = init;
