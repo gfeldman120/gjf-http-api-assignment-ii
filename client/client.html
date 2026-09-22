@@ -9,14 +9,33 @@
     // Taken from 1st assignment, need to change for this one
     const handleResponse = async (response) => {
       const content = document.querySelector('#content');
+
+      switch(response.status) {
+        case 200:
+          content.innerHTML = `<b>Success</b>`;
+          break;
+        case 201:
+          content.innerHTML = '<b>Created</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>Updated (No Content)</b>';
+          return;
+        case 400:
+          content.innerHTML = `<b>Bad Request</b>`;
+          break;
+        default: 
+          content.innerHTML = `Error code not implemented by client.`;
+          break;
+      }
+
       let object = await response.json();
+      content.innerHTML += `<p>Message: ${object.message}</p>`;
+
       let jsonString = JSON.stringify(object);
       console.log(jsonString);
-      let result = `Message: ${jsonString.split('message":"')[1].split('"')[0]}`;
-      content.innerHTML += `<p>${result}</p>`;
     }
 
-    // Make a GET request
+    // Make a GET or HEAD request
     const getRequest = async () => {
       const url = document.querySelector('#urlField').value;
       const method = document.querySelector('#methodSelect').value;
@@ -29,13 +48,19 @@
       handleResponse(response);
     }
 
+    // Make a POST request
     const postRequest = async () => {
       const url = document.querySelector('#urlField').value;
+      const name = document.querySelector('#nameField').value;
+      const age = document.querySelector('#ageField').value;
+      // Format data and use stringify
+      const formattedData = JSON.stringify(`$name=$${name}&age=${age}`);
       let response = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json'
         },
+        body: formattedData
       });
       handleResponse(response);
     }
@@ -43,9 +68,9 @@
     // Page setup
     const init = () => {
       const addUserButton = document.querySelector('#nameForm');
-      addUserButton.addEventListener('click', () => { postRequest() });
+      addUserButton.addEventListener('submit', () => { postRequest() });
       const getUsersButton = document.querySelector('#nameForm');
-      getUsersButton.addEventListener('click', () => { getRequest() });
+      getUsersButton.addEventListener('submit', () => { getRequest() });
     }
 
     window.onload = init;
