@@ -29,9 +29,9 @@ const parseBody = (request, response) => {
     } else if (type === 'application/json') {
       request.body = JSON.parse(bodyString);
     } else {
-      responseHandler.respond(request, response, 'Fail', 'text/plain', 400);
+      return responseHandler.respond(request, response, JSON.stringify({ message: 'Fail' }), 'application/json', 400);
     }
-    responseHandler.respond(request, response, '', 'text/plain', 400);
+    responseHandler.addUser(request, response);
   });
 };
 
@@ -65,6 +65,7 @@ const onRequest = (request, response) => {
         responseHandler.getUsers(request, response);
         break;
       default:
+        responseHandler.respond(request, response, JSON.stringify( { message: 'Not Found'} ), 'application/json', 404);
         break;
     }
   }

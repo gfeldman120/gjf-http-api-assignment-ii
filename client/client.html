@@ -28,11 +28,11 @@
           break;
       }
 
-      let object = await response.json();
-      content.innerHTML += `<p>Message: ${object.message}</p>`;
-
-      let jsonString = JSON.stringify(object);
-      console.log(jsonString);
+      if (response.method != 'HEAD') {
+        let object = await response.json();
+        let jsonString = JSON.stringify(object);
+        content.innerHTML += `<p>${jsonString}</p>`;
+      }
     }
 
     // Make a GET or HEAD request
@@ -50,15 +50,16 @@
 
     // Make a POST request
     const postRequest = async () => {
-      const url = document.querySelector('#urlField').value;
+      const url = document.querySelector('#nameForm').action;
       const name = document.querySelector('#nameField').value;
       const age = document.querySelector('#ageField').value;
-      // Format data and use stringify
-      const formattedData = JSON.stringify(`$name=$${name}&age=${age}`);
+      // Format data
+      const formattedData = `name=${encodeURIComponent(name)}&age=${encodeURIComponent(age)}`;
       let response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: formattedData
       });
@@ -68,9 +69,15 @@
     // Page setup
     const init = () => {
       const addUserButton = document.querySelector('#nameForm');
-      addUserButton.addEventListener('submit', () => { postRequest() });
-      const getUsersButton = document.querySelector('#nameForm');
-      getUsersButton.addEventListener('submit', () => { getRequest() });
+      addUserButton.addEventListener('submit', (e) => { 
+        e.preventDefault();
+        postRequest();
+        });
+      const getUsersButton = document.querySelector('#userForm');
+      getUsersButton.addEventListener('submit', (e) => { 
+        e.preventDefault();
+        getRequest();
+        });
     }
 
     window.onload = init;

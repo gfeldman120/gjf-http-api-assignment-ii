@@ -28,10 +28,11 @@ const addUser = (request, response) => {
   // If either field is missing, fail
   if(!name || !age) {
     responseJSON.id = 'Missing paramaters';
-    return respond(request, response, responseJSON, 'application/json', 400);
+    return respond(request, response, JSON.stringify(responseJSON), 'application/json', 400);
   }
   // If good, assume update (204) until confirmed new
   let statusCode = 204;
+  responseJSON.message = 'Updated existing user';
   if(!users[name]) {
     // New user
     statusCode = 201;
@@ -41,11 +42,8 @@ const addUser = (request, response) => {
     responseJSON.message = 'Made new user';
   }
   users[name].age = age;
-  // If created user, respond with proper body
-  if(statusCode === 201) {
-    return respond(request, response, responseJSON, 'application/json', statusCode);
-  }
-  return respond(request, response, '', 'text/plain', statusCode);
+  // Respond doesn't write to 204 so no conditional statement is needed
+  return respond(request, response, JSON.stringify(responseJSON), 'application/json', statusCode);
 }
 
 // Put users into JSON format and respond
