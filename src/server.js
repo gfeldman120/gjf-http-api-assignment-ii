@@ -29,7 +29,7 @@ const parseBody = (request, response) => {
     } else if (type === 'application/json') {
       request.body = JSON.parse(bodyString);
     } else {
-      return responseHandler.respond(request, response, JSON.stringify({ message: 'Fail' }), 'application/json', 400);
+      return responseHandler.unsupportedDataType(request, response);
     }
     responseHandler.addUser(request, response);
   });
@@ -51,6 +51,7 @@ const onRequest = (request, response) => {
         parseBody(request, response);
         break;
       default:
+        responseHandler.notFound(request, response);
         break;
     }
   } else {
@@ -65,7 +66,7 @@ const onRequest = (request, response) => {
         responseHandler.getUsers(request, response);
         break;
       default:
-        responseHandler.respond(request, response, JSON.stringify( { message: 'Not Found'} ), 'application/json', 404);
+        responseHandler.notFound(request, response);
         break;
     }
   }

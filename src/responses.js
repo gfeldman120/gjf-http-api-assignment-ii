@@ -22,24 +22,24 @@ const respond = (request, response, content, type, status) => {
 // Add a user
 const addUser = (request, response) => {
   const responseJSON = {
-    message: 'Name and age required'
+    message: 'Name and age are both required.'
   };
   const { name, age } = request.body;
   // If either field is missing, fail
   if(!name || !age) {
-    responseJSON.id = 'Missing paramaters';
+    responseJSON.id = 'missingParameters';
     return respond(request, response, JSON.stringify(responseJSON), 'application/json', 400);
   }
   // If good, assume update (204) until confirmed new
   let statusCode = 204;
-  responseJSON.message = 'Updated existing user';
+  responseJSON.message = 'Updated existing user.';
   if(!users[name]) {
     // New user
     statusCode = 201;
     users[name] = {
       name: name
     }
-    responseJSON.message = 'Made new user';
+    responseJSON.message = 'Created user successfully.';
   }
   users[name].age = age;
   // Respond doesn't write to 204 so no conditional statement is needed
@@ -54,7 +54,7 @@ const getUsers = (request, response) => {
   respond(request, response, JSON.stringify(responseJSON), 'application/json', 200);
 }
 
-// Helper methods to improve server.js readability
+// Other helper methods to improve server.js readability
 const getIndex = (request, response) => {
   respond(request, response, index, 'text/html', 200);
 };
@@ -63,11 +63,20 @@ const getCSS = (request, response) => {
   respond(request, response, css, 'text/css', 200);
 }
 
+const notFound = (request, response) => {
+  respond(request, response, JSON.stringify( { message: 'The page you are looking for was not found.'} ), 'application/json', 404);
+}
+
+const unsupportedDataType = (request, response) => {
+  respond(request, response, JSON.stringify({ message: 'Unsupported data type.' }), 'application/json', 400);
+}
+
 // Export these functions for use elsewhere
 module.exports = {
-  respond,
   addUser,
   getUsers,
   getIndex,
   getCSS,
+  notFound,
+  unsupportedDataType,
 };
