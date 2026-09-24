@@ -6,10 +6,10 @@
   
   <script>
 
-    // Taken from 1st assignment, need to change for this one
+    // Get response, change text and show results
     const handleResponse = async (response) => {
       const content = document.querySelector('#content');
-
+      // Change title text based on status code
       switch(response.status) {
         case 200:
           content.innerHTML = `<b>Success</b>`;
@@ -24,12 +24,13 @@
           content.innerHTML = `<b>Bad Request</b>`;
           break;
         default: 
-          content.innerHTML = `Error code not implemented by client.`;
+          content.innerHTML = `<b>Error code not implemented by client.<b>`;
           break;
       }
-
-      if (response.method != 'HEAD') {
-        let object = await response.json();
+      // Not using response.json() to avoid parsing errors in console when making HEAD request
+      let text = await response.text();
+      if(text) {
+        let object = JSON.parse(text);
         let jsonString = JSON.stringify(object);
         content.innerHTML += `<p>${jsonString}</p>`;
       }

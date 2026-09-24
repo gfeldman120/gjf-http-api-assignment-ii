@@ -13,7 +13,7 @@ const respond = (request, response, content, type, status) => {
     'Content-Type': type,
     'Content-Length': Buffer.byteLength(content, 'utf8')
   });
-  if(request.method !== 'HEAD' && status !== '204') {
+  if(request.method !== 'HEAD') {
     response.write(content);
   }
   response.end();
