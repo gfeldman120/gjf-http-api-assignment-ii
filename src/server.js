@@ -10,7 +10,7 @@ const parseBody = (request, response) => {
   // Incoming data
   const body = [];
   // Stop if upload breaks partway through
-  request.on('error', (err) => {
+  request.on('error', () => {
     response.statusCode = 400;
     response.end();
   });
