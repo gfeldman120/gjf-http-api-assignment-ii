@@ -64,11 +64,19 @@ const getCSS = (request, response) => {
 }
 
 const notFound = (request, response) => {
-  respond(request, response, JSON.stringify( { message: 'The page you are looking for was not found.'} ), 'application/json', 404);
+  respond(request, response, JSON.stringify(
+    {
+      message: 'The page you are looking for was not found.',
+      id: 'notFound'
+    }), 'application/json', 404);
 }
 
 const unsupportedDataType = (request, response) => {
-  respond(request, response, JSON.stringify({ message: 'Unsupported data type.' }), 'application/json', 400);
+  respond(request, response, JSON.stringify(
+    {
+      message: 'Unsupported data type.',
+      id: 'unsupportedDataType'
+    }), 'application/json', 400);
 }
 
 // Export these functions for use elsewhere
